@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Stream</title>
+</head>
+<body>
+    <h1>Video Stream</h1>
+    <img src="{{ url_for('video_feed') }}" width="640" height="480">
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Drowsiness Detection</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+</head>
+<body>
+    <h1>Drowsiness Detection</h1>
+    <div id="video-container">
+        <img id="video-stream" src="">
+    </div>
+    <script>
+        var socket = io.connect('http://localhost:5000');
+
+        socket.on('frame', function(data) {
+            var image = "data:image/jpg;base64," + btoa(String.fromCharCode.apply(null, new Uint8Array(data.image)));
+            $('#video-stream').attr('src', image);
+        });
+    </script>
+</body>
+</html> -->

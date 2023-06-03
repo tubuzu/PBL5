@@ -12,7 +12,7 @@ pygame.mixer.music.set_volume(speaker_volume)
 pygame.mixer.music.load(path)
 BUFF_SIZE = 65536
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(("192.168.1.5", 9999))
+client_socket.connect(("192.168.25.102", 9998))
 frame_buffer = []
 drowsy_threshold = 4
 frame_check = 10
@@ -42,6 +42,7 @@ def capture_loop():
     global last_sleep_time
     with picamera.PiCamera() as camera:
         camera.resolution = (640, 480)
+        camera.framerate = 60
         print("Starting Camera...........")
         time.sleep(1)
         stream = io.BytesIO()

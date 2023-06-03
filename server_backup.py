@@ -5,19 +5,17 @@ from PIL import Image
 import cv2
 import numpy as np
 import imutils
-import requests
-from threading import Thread
 
 from scipy.spatial import distance
 from imutils import face_utils
 import dlib
 
 def eye_aspect_ratio(eye):
-    A = distance.euclidean(eye[1], eye[5])
-    B = distance.euclidean(eye[2], eye[4])
-    C = distance.euclidean(eye[0], eye[3])
-    ear = (A + B) / (2.0 * C)
-    return ear
+	A = distance.euclidean(eye[1], eye[5])
+	B = distance.euclidean(eye[2], eye[4])
+	C = distance.euclidean(eye[0], eye[3])
+	ear = (A + B) / (2.0 * C)
+	return ear
 
 detect = dlib.get_frontal_face_detector()
 predict = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
@@ -28,7 +26,7 @@ predict = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
 host_ip = "192.168.1.5"
 port = 9999
 server_socket = socket.socket()
-server_socket.bind((host_ip, port))
+server_socket.bind((host_ip, port))  
 server_socket.listen(0)
 print("Listening")
 
@@ -40,18 +38,6 @@ thresh = 0.27
 frame_buffer = []
 drowsy_threshold = 4
 frame_check = 10
-
-# Flask server details
-flask_host = '127.0.0.1'  # Replace with the actual IP address of the Flask server
-flask_port = 5000  # Replace with the actual port of the Flask server
-
-# Function to send the request
-def send_request(img_encoded):
-    try:
-        requests.post(f"http://{flask_host}:{flask_port}/frame", files={"image": img_encoded})
-    except requests.exceptions.RequestException as e:
-        # Handle the exception here
-        pass
 
 try:
     while True:
@@ -72,7 +58,7 @@ try:
         frame = imutils.resize(frame, width=450)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         subjects = detect(gray, 0)
-
+        
         if len(subjects):
             for subject in subjects:
                 shape = predict(gray, subject)
@@ -89,7 +75,7 @@ try:
                 cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
                 cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
 
-                print("EAR: " + str(ear))
+                print("EAR :" + str(ear))
 
                 message = ""
                 if ear < thresh:
@@ -104,13 +90,10 @@ try:
                     connection.flush()
 
                 print("State: " + str(message))
-
         else:
             message = "not recognized"
             connection.write(message.encode())
             connection.flush()
-        
-        print("State: " + str(message))
 
         if len(frame_buffer) > frame_check:
             frame_buffer = frame_buffer[-frame_check:]
@@ -118,21 +101,14 @@ try:
         num_closed = sum(frame_buffer)
 
         if num_closed >= drowsy_threshold and frame_buffer[-1] == 1:
-            cv2.putText(frame, "****************ALERT!****************", (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-            cv2.putText(frame, "****************ALERT!****************", (10, 325),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            cv2.putText(frame, "****************ALERT!****************", (10, 30),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            cv2.putText(frame, "****************ALERT!****************", (10,325),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-        # Send frame to Flask server
-        _, img_encoded = cv2.imencode('.jpg', frame)
-        request_thread = Thread(target=send_request, args=(img_encoded,))
-        request_thread.start()
-        cv2.imshow('Video', frame)
+        cv2.imshow('Video',frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
+           break
     cv2.destroyAllWindows()
-
 finally:
     connection.close()
     server_socket.close()
+    # ../venv/Scripts/activate
