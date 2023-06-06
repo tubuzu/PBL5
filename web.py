@@ -5,11 +5,24 @@ from firebase_admin import credentials, db
 # from PIL import Image
 import time
 
+from datetime import datetime
+
 cred = credentials.Certificate("firebase/driver-4bbdf-firebase-adminsdk-ja22n-815c025c70.json")
 firebase_admin.initialize_app(cred,{
 'databaseURL':
 'https://driver-4bbdf-default-rtdb.asia-southeast1.firebasedatabase.app'
 })
+now = datetime.now()
+now_time = now.strftime("%H:%M:%S")
+now_date = now.strftime("%d/%m/%Y")
+time_node = db.reference('times').push()
+drowsy_time = None
+awake_time = None
+warning = False
+
+def add_time(time):
+    time_node.set(time)
+    return ''
 
 app = Flask(__name__)
 
@@ -21,8 +34,27 @@ with open('images/white.jpg', 'rb') as f:
 @app.route('/frame', methods=['POST'])
 def receive_frame():
     global cur_image
+    global warning
     # Get the image file from the POST request
     uploaded_file = request.files['image']
+
+    was_warning = warning
+    warning = request.form.get('warning')
+    if warning and not was_warning:
+        drowsy_time = [now_time, now_date]
+    elif not warning and was_warning:
+        awake_time = [now_time, now_date]
+
+    if drowsy_time is not None and awake_time is not None:
+        add_time({
+                'time_drowsy' : drowsy_time[0],
+                'date_drowsy': drowsy_time[1],
+                'time_awake': awake_time[0],
+                'date_awake': awake_time[1],
+            })
+        drowsy_time = None
+        awake_time = None
+
     cur_image = uploaded_file.read()
     response = jsonify(message="ok")
     return response

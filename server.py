@@ -11,23 +11,6 @@ from threading import Thread
 from scipy.spatial import distance
 from imutils import face_utils
 import dlib
-import firebase_admin
-from firebase_admin import credentials, db
-from datetime import datetime
-
-cred = credentials.Certificate("firebase/driver-4bbdf-firebase-adminsdk-ja22n-815c025c70.json")
-firebase_admin.initialize_app(cred,{
-'databaseURL':
-'https://driver-4bbdf-default-rtdb.asia-southeast1.firebasedatabase.app'
-})
-now = datetime.now()
-now_time = now.strftime("%H:%M:%S")
-now_date = now.strftime("%d/%m/%Y")
-time_node = db.reference('times').push()
-time_dr=''
-def add_time(time):
-    time_node.set(time)
-    return ''
 
 def eye_aspect_ratio(eye):
     A = distance.euclidean(eye[1], eye[5])
@@ -57,6 +40,7 @@ thresh = 0.27
 frame_buffer = []
 drowsy_threshold = 4
 frame_check = 10
+warning = False
 
 # Flask server details
 flask_host = '127.0.0.1'  # Replace with the actual IP address of the Flask server
@@ -65,7 +49,10 @@ flask_port = 5000  # Replace with the actual port of the Flask server
 # Function to send the request
 def send_request(img_encoded):
     try:
-        requests.post(f"http://{flask_host}:{flask_port}/frame", files={"image": img_encoded})
+        data = {
+            'warning': warning
+        }
+        requests.post(f"http://{flask_host}:{flask_port}/frame", files={"image": img_encoded}, data=data)
     except requests.exceptions.RequestException as e:
         # Handle the exception here
         pass
@@ -135,17 +122,14 @@ try:
         num_closed = sum(frame_buffer)
 
         if num_closed >= drowsy_threshold and frame_buffer[-1] == 1:
-            time_dr=now_time
             cv2.putText(frame, "****************ALERT!****************", (10, 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             cv2.putText(frame, "****************ALERT!****************", (10, 325),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        else:  
-            add_time({
-                'time_drowsy' : time_dr,
-                'time_awake': now_time,
-                'date': now_date
-            })
+            warning = True
+        else:
+            warning = False
+            
         # Send frame to Flask server
         _, img_encoded = cv2.imencode('.jpg', frame)
         request_thread = Thread(target=send_request, args=(img_encoded,))
