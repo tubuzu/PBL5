@@ -16,8 +16,8 @@ now = datetime.now()
 now_time = now.strftime("%H:%M:%S")
 now_date = now.strftime("%d/%m/%Y")
 time_node = db.reference('times').push()
-drowsy_time = None
-awake_time = None
+drowsy_time = []
+awake_time = []
 warning = False
 
 def add_time(time):
@@ -39,28 +39,28 @@ def receive_frame():
     uploaded_file = request.files['image']
 
     was_warning = warning
-    warning = request.form.get('warning')
+    warning = str(request.form.get('warning')).lower() == "true"
     if warning and not was_warning:
         drowsy_time = [now_time, now_date]
-    elif not warning and was_warning:
+    if not warning and was_warning:
         awake_time = [now_time, now_date]
-
-    if drowsy_time is not None and awake_time is not None:
         add_time({
                 'time_drowsy' : drowsy_time[0],
                 'date_drowsy': drowsy_time[1],
                 'time_awake': awake_time[0],
                 'date_awake': awake_time[1],
             })
-        drowsy_time = None
-        awake_time = None
+        drowsy_time = []
+        awake_time = []
+
+    # if len(drowsy_time) == 2 and len(awake_time) == 2:
 
     cur_image = uploaded_file.read()
     response = jsonify(message="ok")
     return response
 
 def generate_frames():
-    # global cur_image
+    global cur_image
     while True:
         yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + cur_image + b'\r\n')
 
