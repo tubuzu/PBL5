@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>History</h1>
+	<table>
+		<tr>
+			<th>Date</th>
+			<th>Time</th>
+		</tr>
+		{% for data in history_data %}
+		<tr>
+			<td>{{ data.day }}</td>
+			<td>{{ data.time }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endblock %}

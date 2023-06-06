@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Video Stream</title>
+    <title>Cảnh báo ngủ gật</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Video Stream</h1>
-    <img src="{{ url_for('video_feed') }}" width="640" height="480">
+	<div class="sidebar">
+		<a href="{{ url_for('index') }}">Trang chủ</a>
+		<a href="{{ url_for('camera') }}">Camera</a>
+        <a href="{{ url_for('history') }}">Lịch sử</a>
+		<a href="{{ url_for('frequency') }}">Tần suất</a>
+	</div>
+	<div class="main">
+		{% block content %}
+            <h1>Hệ thống cảnh báo ngủ gật!<h1>
+		{% endblock %}
+
+	</div>
 </body>
 </html>
 
@@ -20,6 +31,7 @@
     <h1>Drowsiness Detection</h1>
     <div id="video-container">
         <img id="video-stream" src="">
+        
     </div>
     <script>
         var socket = io.connect('http://localhost:5000');

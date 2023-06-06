@@ -11,6 +11,23 @@ from threading import Thread
 from scipy.spatial import distance
 from imutils import face_utils
 import dlib
+import firebase_admin
+from firebase_admin import credentials, db
+from datetime import datetime
+
+cred = credentials.Certificate("firebase/driver-4bbdf-firebase-adminsdk-ja22n-815c025c70.json")
+firebase_admin.initialize_app(cred,{
+'databaseURL':
+'https://driver-4bbdf-default-rtdb.asia-southeast1.firebasedatabase.app'
+})
+now = datetime.now()
+now_time = now.strftime("%H:%M:%S")
+now_date = now.strftime("%d/%m/%Y")
+time_node = db.reference('times').push()
+time_dr=''
+def add_time(time):
+    time_node.set(time)
+    return ''
 
 def eye_aspect_ratio(eye):
     A = distance.euclidean(eye[1], eye[5])
@@ -25,7 +42,7 @@ predict = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
 (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_68_IDXS["left_eye"]
 (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_68_IDXS["right_eye"]
 
-host_ip = "192.168.1.5"
+host_ip = "0.0.0.0"
 port = 9999
 server_socket = socket.socket()
 server_socket.bind((host_ip, port))
@@ -118,11 +135,17 @@ try:
         num_closed = sum(frame_buffer)
 
         if num_closed >= drowsy_threshold and frame_buffer[-1] == 1:
+            time_dr=now_time
             cv2.putText(frame, "****************ALERT!****************", (10, 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             cv2.putText(frame, "****************ALERT!****************", (10, 325),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
+        else:  
+            add_time({
+                'time_drowsy' : time_dr,
+                'time_awake': now_time,
+                'date': now_date
+            })
         # Send frame to Flask server
         _, img_encoded = cv2.imencode('.jpg', frame)
         request_thread = Thread(target=send_request, args=(img_encoded,))
