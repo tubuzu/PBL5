@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST" action="{{ url_for('frequency') }}">
+        <label for="days">Chọn thời gian</label>
+        <select id="days" name="days">
+            <option value="1">1 ngày</option>
+            <option value="3">3 ngày</option>
+            <option value="7">1 tuần</option>
+            <option value="30">1 tháng</option>
+            <option value="90">3 tháng</option>
+			<option value="180">6 tháng</option>
+        </select>
+        <button type="submit">Xem</button>
+    </form>
+    <br>
+	<h1 id="selected-days">Thống kê số lần ngủ gật</h1>
+	<br>
+    {% if figdata_png %}
+        <img src="data:image/png;base64,{{ figdata_png }}" alt="Frequency chart">
+    {% endif %}
+{% endblock %}

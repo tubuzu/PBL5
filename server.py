@@ -25,7 +25,7 @@ predict = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
 (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_68_IDXS["left_eye"]
 (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_68_IDXS["right_eye"]
 
-host_ip = "192.168.1.5"
+host_ip = "0.0.0.0"
 port = 9999
 server_socket = socket.socket()
 server_socket.bind((host_ip, port))
@@ -40,6 +40,7 @@ thresh = 0.27
 frame_buffer = []
 drowsy_threshold = 4
 frame_check = 10
+warning = False
 
 # Flask server details
 flask_host = '127.0.0.1'  # Replace with the actual IP address of the Flask server
@@ -48,7 +49,10 @@ flask_port = 5000  # Replace with the actual port of the Flask server
 # Function to send the request
 def send_request(img_encoded):
     try:
-        requests.post(f"http://{flask_host}:{flask_port}/frame", files={"image": img_encoded})
+        data = {
+            'warning': warning
+        }
+        requests.post(f"http://{flask_host}:{flask_port}/frame", files={"image": img_encoded}, data=data)
     except requests.exceptions.RequestException as e:
         # Handle the exception here
         pass
@@ -122,7 +126,10 @@ try:
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             cv2.putText(frame, "****************ALERT!****************", (10, 325),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
+            warning = True
+        else:
+            warning = False
+            
         # Send frame to Flask server
         _, img_encoded = cv2.imencode('.jpg', frame)
         request_thread = Thread(target=send_request, args=(img_encoded,))

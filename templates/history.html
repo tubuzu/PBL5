@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>History</h1>
+	<table>
+		<tr>
+			<th>Drowsy time</th>
+			<th>Drowsy date</th>
+			<th>Awake time</th>
+			<th>Awake date</th>
+		</tr>
+		{% for data in history_data %}
+		<tr>
+			<td>{{ data.time_drowsy }}</td>
+			<td>{{ data.date_drowsy }}</td>
+			<td>{{ data.time_awake }}</td>
+			<td>{{ data.date_awake }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+{% endblock %}

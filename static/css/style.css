@@ -1,0 +1,55 @@
+/* Thiết lập kích thước cho thanh sidebar */
+.sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #4a5e4a;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+  
+  /* Thiết lập màu chữ cho các mục trong thanh sidebar */
+  .sidebar a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 40px;
+    color: #f0f7f5;
+    display: block;
+    border-bottom: 3px solid rgb(255, 255, 255);
+  }
+  
+  /* Thiết lập màu chữ khi hover vào các mục trong thanh sidebar */
+  .sidebar a:hover {
+    color: #0b0a0a;
+    background-color: #ecf0ec;
+  }
+  
+  /* Thiết lập kích thước và vị trí của phần còn lại của trang web */
+  .main {
+    margin-left: 200px;
+    padding: 0px 10px;
+  }
+  
+  /* Thiết lập font chữ và kích thước cho tiêu đề trang web */
+  h1 {
+    font-family: Arial, sans-serif;
+    font-size: 36px;
+    margin-top: 0px;
+  }
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		th, td {
+			text-align: left;
+			padding: 8px;
+			border: 1px solid #ddd;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
