@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Cảnh báo ngủ gật</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -10,7 +11,7 @@
 		<a href="{{ url_for('index') }}">Trang chủ</a>
 		<a href="{{ url_for('camera') }}">Camera</a>
         <a href="{{ url_for('history') }}">Lịch sử</a>
-		<a href="{{ url_for('frequency') }}">Tần suất</a>
+		<a href="{{ url_for('frequency') }}">Thống kê</a>
 	</div>
 	<div class="main">
 		{% block content %}
