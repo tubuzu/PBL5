@@ -34,7 +34,7 @@ client_socket, client_address = server_socket.accept()
 print("Client connected from {}:{}".format(client_address[0], client_address[1]))
 connection = client_socket.makefile('rwb')
 
-thresh = 0.27
+thresh = 0.25
 frame_buffer = []
 drowsy_threshold = 4
 frame_check = 10

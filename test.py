@@ -18,7 +18,7 @@ predict = dlib.shape_predictor("models/shape_predictor_68_face_landmarks.dat")
 (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_68_IDXS["left_eye"]
 (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_68_IDXS["right_eye"]
 
-thresh = 0.27
+thresh = 5
 
 drowsy_threshold = 4
 frame_check = 10
