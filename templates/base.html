@@ -6,7 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body style="background-color: rgba(173, 216, 230, 0.5);">
 	<div class="sidebar">
 		<a href="{{ url_for('index') }}">Trang chủ</a>
 		<a href="{{ url_for('camera') }}">Camera</a>
@@ -15,7 +15,18 @@
 	</div>
 	<div class="main">
 		{% block content %}
-            <h1>Hệ thống cảnh báo ngủ gật!<h1>
+        <div style="text-align: center">
+            <h1>PBL5 - Kĩ thuật máy tính</h1>
+            <h2 style="font-size: 46px;">Đề tài: Xây dựng hệ thống cảnh báo ngủ gật<h2>
+            <br>
+            <h3 style="font-size: 36px;">Thành Viên Nhóm:</h3>
+                <p style="font-size: 26px;">Trần Ngọc Quốc</p>
+                <p style="font-size: 26px;">Phạm Sĩ Chiến</p>
+                <p style="font-size: 26px;">Nguyễn Phạm Anh Tú</p>
+                <p style="font-size: 26px;">Huỳnh Đức Trị</p>
+            <h3 style="font-size: 36px;">Giảng Viên Hướng Dẫn</h3>
+            <p style="font-size: 26px;">Ts. Trần Thế Vũ</p>
+        </div>
 		{% endblock %}
 
 	</div>
