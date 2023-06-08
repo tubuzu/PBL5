@@ -12,7 +12,7 @@ pygame.mixer.music.set_volume(speaker_volume)
 pygame.mixer.music.load(path)
 BUFF_SIZE = 65536
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(("192.168.25.102", 9998))
+client_socket.connect(("192.168.25.102", 9999))
 frame_buffer = []
 drowsy_threshold = 4
 frame_check = 10
